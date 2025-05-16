@@ -6,6 +6,13 @@ import DecentraBidABI from "../contracts/DecentraBid.json";
 // For local development, you can use a placeholder
 const CONTRACT_ADDRESS = "0x0000000000000000000000000000000000000000"; 
 
+// Define window.ethereum for TypeScript
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
+
 // Initialize ethers provider and contract
 export const getProvider = () => {
   if (window.ethereum) {

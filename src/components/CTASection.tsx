@@ -1,5 +1,31 @@
 
+import { useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { connectWallet } from '@/utils/web3';
+import { toast } from "sonner";
+
 const CTASection = () => {
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+
+  const handleConnectWallet = async () => {
+    try {
+      setIsConnecting(true);
+      const { address } = await connectWallet();
+      setWalletAddress(address);
+      toast.success("Wallet connected successfully!", {
+        description: `Connected with address ${address.slice(0, 6)}...${address.slice(-4)}`
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to connect wallet", {
+        description: "Please make sure you have MetaMask installed and try again."
+      });
+    } finally {
+      setIsConnecting(false);
+    }
+  };
+
   return (
     <section id="launch" className="section bg-decentra-dark relative overflow-hidden">
       {/* Background decorative elements */}
@@ -16,10 +42,31 @@ const CTASection = () => {
             Start bidding and selling with full transparency and security on the blockchain today.
           </p>
           
-          <div className="animate-fade-in">
-            <a href="#" className="btn-primary text-lg px-8 py-4 shadow-xl hover:shadow-decentra-primary/30">
-              Launch DecentraBid
-            </a>
+          <div className="animate-fade-in flex flex-col md:flex-row items-center justify-center gap-4">
+            {walletAddress ? (
+              <div className="flex flex-col gap-4 items-center">
+                <Button 
+                  variant="default" 
+                  size="lg" 
+                  className="bg-decentra-primary hover:bg-decentra-primary/90 text-white shadow-lg"
+                >
+                  Launch DecentraBid
+                </Button>
+                <p className="text-sm text-foreground/70">
+                  Connected: {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
+                </p>
+              </div>
+            ) : (
+              <Button 
+                variant="default" 
+                size="lg" 
+                className="bg-decentra-primary hover:bg-decentra-primary/90 text-white shadow-lg"
+                disabled={isConnecting}
+                onClick={handleConnectWallet}
+              >
+                {isConnecting ? "Connecting..." : "Connect Wallet to Start"}
+              </Button>
+            )}
           </div>
         </div>
       </div>

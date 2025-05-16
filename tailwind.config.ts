@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -52,6 +53,13 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				decentra: {
+					primary: '#4F46E5',
+					accent: '#22D3EE',
+					dark: '#0F172A',
+					light: '#F8FAFC',
+					gray: '#64748B',
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
@@ -84,12 +92,36 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'fade-in': {
+					'0%': {
+						opacity: '0',
+						transform: 'translateY(10px)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'translateY(0)'
+					}
+				},
+				'pulse-glow': {
+					'0%, 100%': {
+						boxShadow: '0 0 5px 0px rgba(79, 70, 229, 0.2)'
+					},
+					'50%': {
+						boxShadow: '0 0 20px 5px rgba(79, 70, 229, 0.4)'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fade-in 0.6s ease-out',
+				'pulse-glow': 'pulse-glow 3s infinite'
+			},
+			backgroundImage: {
+				'hero-pattern': "url('https://images.unsplash.com/photo-1470813740244-df37b8c1edcb?q=80&w=1896&auto=format&fit=crop')",
+				'gradient-primary': 'linear-gradient(90deg, #4F46E5 0%, #22D3EE 100%)',
+			},
 		}
 	},
 	plugins: [require("tailwindcss-animate")],

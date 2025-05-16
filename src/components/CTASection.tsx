@@ -1,12 +1,19 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { connectWallet } from '@/utils/web3';
+import { connectWallet, isMetaMaskInstalled } from '@/utils/web3';
 import { toast } from "sonner";
+import { Wallet } from "lucide-react";
 
 const CTASection = () => {
   const [isConnecting, setIsConnecting] = useState(false);
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [isWalletInstalled, setIsWalletInstalled] = useState(true);
+
+  useEffect(() => {
+    // Check if wallet is installed on component mount
+    setIsWalletInstalled(isMetaMaskInstalled());
+  }, []);
 
   const handleConnectWallet = async () => {
     try {
@@ -16,10 +23,10 @@ const CTASection = () => {
       toast.success("Wallet connected successfully!", {
         description: `Connected with address ${address.slice(0, 6)}...${address.slice(-4)}`
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       toast.error("Failed to connect wallet", {
-        description: "Please make sure you have MetaMask installed and try again."
+        description: error.message || "Please make sure you have MetaMask installed and try again."
       });
     } finally {
       setIsConnecting(false);
@@ -57,15 +64,26 @@ const CTASection = () => {
                 </p>
               </div>
             ) : (
-              <Button 
-                variant="default" 
-                size="lg" 
-                className="bg-decentra-primary hover:bg-decentra-primary/90 text-white shadow-lg"
-                disabled={isConnecting}
-                onClick={handleConnectWallet}
-              >
-                {isConnecting ? "Connecting..." : "Connect Wallet to Start"}
-              </Button>
+              <div className="flex flex-col gap-4 items-center">
+                <Button 
+                  variant="default" 
+                  size="lg" 
+                  className="bg-decentra-primary hover:bg-decentra-primary/90 text-white shadow-lg"
+                  disabled={isConnecting || !isWalletInstalled}
+                  onClick={handleConnectWallet}
+                >
+                  {isConnecting ? "Connecting..." : (
+                    <>
+                      <Wallet /> Connect Wallet to Start
+                    </>
+                  )}
+                </Button>
+                {!isWalletInstalled && (
+                  <p className="text-sm text-destructive">
+                    No Ethereum wallet detected. Please install MetaMask to continue.
+                  </p>
+                )}
+              </div>
             )}
           </div>
         </div>

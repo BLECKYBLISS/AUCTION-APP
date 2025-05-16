@@ -13,9 +13,14 @@ declare global {
   }
 }
 
+// Check if MetaMask is installed
+export const isMetaMaskInstalled = () => {
+  return typeof window !== 'undefined' && window.ethereum !== undefined;
+};
+
 // Initialize ethers provider and contract
 export const getProvider = () => {
-  if (window.ethereum) {
+  if (isMetaMaskInstalled()) {
     return new ethers.providers.Web3Provider(window.ethereum);
   }
   return null;
@@ -27,13 +32,21 @@ export const getContract = (providerOrSigner: ethers.providers.Web3Provider | et
 
 // Connect wallet
 export const connectWallet = async () => {
+  if (!isMetaMaskInstalled()) {
+    throw new Error("No Ethereum wallet extension detected. Please install MetaMask or another wallet.");
+  }
+
   try {
     const provider = getProvider();
-    if (!provider) throw new Error("No Ethereum browser extension detected");
+    if (!provider) throw new Error("Failed to initialize provider");
     
-    await provider.send("eth_requestAccounts", []);
+    // Request account access
+    await window.ethereum.request({ method: "eth_requestAccounts" });
+    
     const signer = provider.getSigner();
     const address = await signer.getAddress();
+    
+    console.log("Wallet connected successfully:", address);
     return { address, signer };
   } catch (error) {
     console.error("Error connecting wallet:", error);

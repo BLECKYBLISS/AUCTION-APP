@@ -33,9 +33,14 @@ const AuctionDetail = () => {
         const auctionData = await getAuction(provider, parseInt(id));
         setAuction(auctionData);
 
-        // Check for wallet
-        if (provider.provider.selectedAddress) {
-          setWalletAddress(provider.provider.selectedAddress);
+        // Check for wallet address
+        try {
+          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+          if (accounts && accounts.length > 0) {
+            setWalletAddress(accounts[0]);
+          }
+        } catch (walletError) {
+          console.error("Error checking wallet:", walletError);
         }
         
         setError(null);

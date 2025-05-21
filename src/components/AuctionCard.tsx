@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { placeBid, getProvider } from '@/utils/web3';
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -133,7 +134,16 @@ const AuctionCard = ({ auction }: AuctionProps) => {
           </div>
         </div>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="flex flex-col gap-4">
+        <Link to={`/auction/${auction.id}`} className="w-full">
+          <Button 
+            variant="outline" 
+            className="w-full"
+          >
+            View Details
+          </Button>
+        </Link>
+
         {isAuctionActive ? (
           <div className="w-full space-y-2">
             <div className="flex gap-2">

@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { connectWallet, isMetaMaskInstalled } from '@/utils/web3';
 import { toast } from "sonner";
@@ -56,8 +57,9 @@ const CTASection = () => {
                   variant="default" 
                   size="lg" 
                   className="bg-decentra-primary hover:bg-decentra-primary/90 text-white shadow-lg"
+                  asChild
                 >
-                  Launch DecentraBid
+                  <Link to="/auctions">Launch DecentraBid</Link>
                 </Button>
                 <p className="text-sm text-foreground/70">
                   Connected: {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
